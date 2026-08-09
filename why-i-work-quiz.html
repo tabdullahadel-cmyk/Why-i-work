@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>وأنت لماذا تعمل؟ — استبيان تفاعلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14110F;
+  --ink-2:#4A4441;
+  --ink-3:#8A817C;
+  --paper:#F7F5F2;
+  --card:#FFFFFF;
+  --line:#E5E0DA;
+  --mad:#B0805A;
+  --was:#5E8496;
+  --naf:#7E6E9E;
+  --man:#4B7C63;
+  --radius:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  font-family:'IBM Plex Sans Arabic',system-ui,'Segoe UI',Tahoma,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.75;
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:20px 16px 60px;
+}
+.wrap{width:100%;max-width:680px}
+
+/* ---------- shared ---------- */
+.badge{
+  display:inline-block;border:1px solid var(--ink);border-radius:999px;
+  padding:5px 18px;font-size:13px;font-weight:500;letter-spacing:.2px;
+}
+h1{font-size:clamp(30px,7vw,46px);font-weight:700;margin:22px 0 10px;letter-spacing:-.5px}
+h2{font-size:clamp(21px,4.6vw,27px);font-weight:600;margin:0 0 6px;line-height:1.5}
+.sub{color:var(--ink-3);font-size:15px;margin:0}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 22px;box-shadow:0 1px 2px rgba(20,17,15,.04),0 8px 28px rgba(20,17,15,.05);
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--ink);color:#fff;border:none;border-radius:999px;
+  padding:14px 30px;font-size:16px;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:transform .15s ease,opacity .15s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--ink)}
+.btn:disabled{opacity:.28;cursor:not-allowed;transform:none}
+.center{text-align:center}
+
+/* ---------- intro ---------- */
+#intro{text-align:center;padding-top:24px}
+.intro-note{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:20px 22px;margin:26px 0;text-align:right;font-size:15px;color:var(--ink-2);
+}
+.intro-note b{color:var(--ink);font-weight:600}
+.dirs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 4px}
+.dirs div{
+  border-radius:12px;padding:12px 6px;font-size:12.5px;font-weight:600;color:#fff;
+}
+.meta{font-size:13px;color:var(--ink-3);margin-top:18px}
+
+/* ---------- quiz ---------- */
+#quiz{display:none}
+.bar{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.bar i{display:block;height:100%;background:var(--ink);border-radius:99px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+.counter{display:flex;justify-content:space-between;font-size:13px;color:var(--ink-3);margin-bottom:22px}
+.qnum{font-size:13px;color:var(--ink-3);font-weight:500;margin-bottom:6px}
+.opts{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.opt{
+  display:block;width:100%;text-align:right;background:var(--card);
+  border:1px solid var(--line);border-radius:13px;padding:15px 17px;
+  font-size:15.5px;font-family:inherit;color:var(--ink);cursor:pointer;
+  transition:border-color .15s,background .15s,transform .1s;line-height:1.6;
+}
+.opt:hover{border-color:var(--ink-3);background:#FCFBFA}
+.opt.sel{border-color:var(--ink);background:var(--ink);color:#fff}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;gap:10px}
+.back{background:none;border:none;color:var(--ink-3);font-family:inherit;font-size:14.5px;cursor:pointer;padding:10px}
+.back:disabled{opacity:.3;cursor:not-allowed}
+
+/* ---------- result ---------- */
+#result{display:none}
+.hero{
+  border-radius:var(--radius);padding:30px 24px;color:#fff;text-align:center;margin-bottom:14px;
+}
+.hero .lbl{font-size:13px;opacity:.85;letter-spacing:.4px}
+.hero .name{font-size:clamp(28px,7vw,40px);font-weight:700;margin:6px 0 4px}
+.hero .tag{font-size:15.5px;opacity:.92;font-weight:400}
+.sect{margin-top:14px}
+.sect h3{font-size:16px;font-weight:600;margin:0 0 16px;display:flex;align-items:center;gap:9px}
+.sect h3 span{font-size:12px;color:var(--ink-3);font-weight:400}
+.row{margin-bottom:15px}
+.row .top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.row .top b{font-weight:600}
+.row .top em{font-style:normal;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.track{height:9px;background:#EFEBE6;border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;border-radius:99px;width:0;transition:width .9s cubic-bezier(.4,0,.2,1)}
+.desc{font-size:15px;color:var(--ink-2);margin:0}
+.desc + .desc{margin-top:12px}
+.quote{
+  border-right:3px solid var(--line);padding:2px 14px;margin:16px 0 0;
+  font-size:14.5px;color:var(--ink-3);
+}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px}
+.pill{
+  border:1px solid var(--line);border-radius:13px;padding:14px 8px;text-align:center;
+}
+.pill .dot{width:11px;height:11px;border-radius:99px;margin:0 auto 8px;background:var(--line)}
+.pill .t{font-size:13.5px;font-weight:600;line-height:1.4}
+.pill .s{font-size:12px;color:var(--ink-3);margin-top:3px}
+.pill.on .dot{background:var(--man)}
+.pill.mid .dot{background:#D9A441}
+.pill.off .dot{background:#C9645A}
+.score{
+  display:flex;align-items:baseline;gap:8px;justify-content:center;margin:4px 0 12px;
+}
+.score b{font-size:44px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.score span{font-size:14px;color:var(--ink-3)}
+.verdict{text-align:center;font-size:15px;color:var(--ink-2);margin:0 0 6px}
+.benefit{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;text-align:center}
+.benefit div{border:1px solid var(--line);border-radius:13px;padding:14px 6px}
+.benefit b{display:block;font-size:20px;font-weight:700;margin-bottom:4px}
+.benefit span{font-size:13px;color:var(--ink-2)}
+.reflect{
+  background:var(--ink);color:#fff;border-radius:var(--radius);padding:24px 22px;
+  text-align:center;margin-top:14px;
+}
+.reflect p{margin:0;font-size:17px;font-weight:500;line-height:1.7}
+.reflect small{display:block;margin-top:8px;font-size:13px;opacity:.6}
+.actions{display:flex;gap:10px;justify-content:center;margin-top:22px;flex-wrap:wrap}
+.foot{text-align:center;font-size:12.5px;color:var(--ink-3);margin-top:26px;line-height:1.9}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:#fff;padding:11px 22px;border-radius:99px;font-size:14px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:99;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:420px){
+  .dirs{grid-template-columns:repeat(2,1fr)}
+  .benefit{grid-template-columns:1fr;text-align:right}
+  .benefit div{display:flex;align-items:center;gap:10px}
+  .benefit b{margin:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ============ INTRO ============ -->
+<section id="intro">
+  <span class="badge">مشاركة المعرفة</span>
+  <h1>وأنت لماذا تعمل؟</h1>
+  <p class="sub">استبيان قصير يحدّد موقعك التقريبي داخل «الاتجاهات الأربعة»</p>
+
+  <div class="dirs">
+    <div style="background:var(--mad)">مادية</div>
+    <div style="background:var(--was)">وسيطة</div>
+    <div style="background:var(--naf)">نفسية</div>
+    <div style="background:var(--man)">معنوية</div>
+  </div>
+
+  <div class="intro-note">
+    ٨ أسئلة فقط، لكل سؤال ٤ خيارات — <b>اختر الأقرب لك لا الأجمل</b>.<br>
+    لا توجد إجابة صحيحة وأخرى خاطئة؛ النتيجة تصف <b>ميلك الغالب</b> وتقيس
+    <b>تكاملك</b> بين الأسباب الثلاثة: مادي صحيح، ونفسي مستقر، ومعنوي راقٍ.
+    <br><br>
+    <span style="color:var(--ink-3);font-size:14px">إجاباتك لا تُرسل لأي جهة — النتيجة تظهر لك وحدك على جهازك.</span>
+  </div>
+
+  <button class="btn" onclick="start()">ابدأ &nbsp;←</button>
+  <p class="meta">الوقت المتوقع: أقل من دقيقتين</p>
+</section>
+
+<!-- ============ QUIZ ============ -->
+<section id="quiz">
+  <div class="bar"><i id="prog" style="width:0"></i></div>
+  <div class="counter"><span id="cnt">١ من ٨</span><span>وأنت لماذا تعمل؟</span></div>
+
+  <div class="card">
+    <div class="qnum" id="qkicker"></div>
+    <h2 id="qtext"></h2>
+    <div class="opts" id="opts"></div>
+  </div>
+
+  <div class="nav">
+    <button class="back" id="back" onclick="prev()">→ السابق</button>
+    <button class="btn" id="next" onclick="next()" disabled>التالي &nbsp;←</button>
+  </div>
+</section>
+
+<!-- ============ RESULT ============ -->
+<section id="result">
+  <div class="hero" id="hero">
+    <div class="lbl">اتجاهك الغالب</div>
+    <div class="name" id="rname"></div>
+    <div class="tag" id="rtag"></div>
+  </div>
+
+  <div class="card sect">
+    <h3>خريطة اتجاهاتك <span>— النسب تقريبية</span></h3>
+    <div id="bars"></div>
+  </div>
+
+  <div class="card sect">
+    <h3>ماذا يعني هذا؟</h3>
+    <p class="desc" id="rdesc"></p>
+    <p class="desc" id="rwatch"></p>
+    <p class="quote" id="rquote"></p>
+  </div>
+
+  <div class="card sect">
+    <h3>أسطورة التكامل <span>— أعطِ كل ذي حقٍّ حقّه</span></h3>
+    <div class="pillars" id="pillars"></div>
+    <div class="score"><b id="intg">0</b><span>/ 100 &nbsp;مؤشر التكامل</span></div>
+    <p class="verdict" id="ivrd"></p>
+  </div>
+
+  <div class="card sect">
+    <h3>فائدة البحث عن السبب</h3>
+    <div class="benefit">
+      <div><b>١</b><span>الفاعلية</span></div>
+      <div><b>٢</b><span>الاستقرار</span></div>
+      <div><b>٣</b><span>الوصول إلى الله</span></div>
+    </div>
+  </div>
+
+  <div class="reflect">
+    <p id="rq"></p>
+    <small>خذ لحظة قبل أن تجيب — هذه هي الفرصة لنتنفس</small>
+  </div>
+
+  <div class="actions">
+    <button class="btn" onclick="share()">انسخ نتيجتي</button>
+    <button class="btn ghost" onclick="again()">أعد الاختبار</button>
+  </div>
+
+  <p class="foot">
+    «لا تستغنِ عن جزءٍ من أجزائك — الشيء الذي تركته يهدمك»<br>
+    لقاء إثرائي: لماذا أعمل؟ · عبدالله ريان
+  </p>
+</section>
+
+</div>
+<div class="toast" id="toast">تم نسخ النتيجة ✓</div>
+
+<script>
+/* ======================= البيانات ======================= */
+const DIRS = {
+  mad:{name:'الاتجاهات المادية', short:'مادية', color:'#B0805A',
+       tag:'أعمل لأشتري ما أريد، ولأكون غنيًا، ولكيلا أكون فقيرًا'},
+  was:{name:'الاتجاهات الوسيطة', short:'وسيطة', color:'#5E8496',
+       tag:'أعمل لأرتاح، ولأستقر، ولأصنع عالمي الخاص'},
+  naf:{name:'الاتجاهات النفسية', short:'نفسية', color:'#7E6E9E',
+       tag:'أعمل لأحقق ذاتي، ولأتغلب على مشكلة، ولأكون ناجحًا'},
+  man:{name:'الاتجاهات المعنوية', short:'معنوية', color:'#4B7C63',
+       tag:'أعمل لأني جزء من الحياة، ولأن العمل عبادة، ولأقدّم خدمة للناس'}
+};
+
+const Q = [
+  { k:'حين يتغيّر الرقم',
+    t:'زاد دخلك فجأة ٤٠٪. ما أول شعور يمرّ عليك؟',
+    o:{ mad:'أخيرًا أقدر أشتري وأسدّد ما في بالي',
+        was:'ارتحت… صار عندي أمان أكبر وبالي أهدأ',
+        naf:'هذا دليل أني في الطريق الصحيح وأني أستحق',
+        man:'خيرٌ أكثر أقدر أنفع فيه غيري' } },
+
+  { k:'يوم يستاهل',
+    t:'آخر يوم عمل شعرت أنه «يستاهل» — ما سببه؟',
+    o:{ mad:'نتيجة ماليّة ملموسة أو صفقة أُغلقت',
+        was:'يوم هادئ، شغلي ماشٍ بلا ضغط ولا فوضى',
+        naf:'أنجزت شيئًا صعبًا وأثبتُّ قدرتي',
+        man:'أحدهم استفاد فعليًا مما قدّمته' } },
+
+  { k:'لو توقف كل شيء',
+    t:'قيل لك: توقّف عن العمل سنة كاملة براتبك كاملًا. ما أكثر ما ستفتقده؟',
+    o:{ mad:'لا شيء تقريبًا… المهم أن الدخل مستمر',
+        was:'النظام والإيقاع الذي يستقر عليه يومي',
+        naf:'الإحساس أني أتطوّر وأثبت نفسي',
+        man:'الإحساس أن لوجودي أثرًا ومعنى' } },
+
+  { k:'الجملة التي تؤلم',
+    t:'أي جملة ستزعجك أكثر لو قيلت عن عملك؟',
+    o:{ mad:'«شغل ما يجيب دخل»',
+        was:'«شغل متعِب وما فيه استقرار»',
+        naf:'«شغل أي أحد يقدر يسويه»',
+        man:'«شغل ما ينفع أحد»' } },
+
+  { k:'قرار المفاضلة',
+    t:'أمامك عرضان وظيفيان. ما المرجّح الأول عندك؟',
+    o:{ mad:'الأعلى دخلًا',
+        was:'الأهدأ والأكثر مرونة',
+        naf:'الأكثر تحديًا ونموًا',
+        man:'الأقرب إلى رسالةٍ تؤمن بها' } },
+
+  { k:'وقود الضغط',
+    t:'حين تشتدّ ضغوط العمل، أي جملة تُرجع لك دافعك؟',
+    o:{ mad:'«عليّ التزامات لا بد أن أغطّيها»',
+        was:'«ستمرّ… وسأعود إلى إيقاعي الطبيعي»',
+        naf:'«أنا أقوى من هذا الموقف»',
+        man:'«هذا سعيٌ وأجر، والرزق على الله»' } },
+
+  { k:'السؤال الكبير',
+    t:'يسألك ابنك بعد عشرين سنة: لماذا كنت تشتغل؟ ما أول جواب صادق يخطر لك؟',
+    o:{ mad:'لأوفّر لكم حياة كريمة لا ينقصكم فيها شيء',
+        was:'ليكون لنا بيت وحياة مستقرة',
+        naf:'لأبني شيئًا أفتخر به',
+        man:'لأن العمل عبادة وخدمة، والسعي مطلبٌ مرحلي' } },
+
+  { k:'الأقرب لقلبك',
+    t:'اختر العبارة الأقرب إليك:',
+    o:{ mad:'العمل وسيلة، والمقابل هو المقصود',
+        was:'العمل هو ما يعطي يومي شكلًا وتوازنًا',
+        naf:'العمل مرآة أرى فيها قدرتي',
+        man:'العمل تعرُّضٌ لسبب الرزق، وحقيقته عند الله' } }
+];
+
+const READ = {
+  mad:{ d:'سببك واضح وملموس، ولا عيب فيه — النظرية نفسها تجعل «السبب المادي الصحيح» ركنًا أصيلًا من التكامل، لا شيئًا يُتبرّأ منه. أنت شخص يترجم جهده إلى نتيجة، وهذا يمنحك انضباطًا ووضوحًا يفتقدهما كثيرون.',
+        w:'لكن حين يقف السبب عند الرقم وحده، يصبح دافعك مرهونًا بتقلّبه: يرتفع فترتفع، وينخفض فتنطفئ. وهنا يفيدك فهم قضية الرزق — الرزق مكتوب ومقدّر ومعلّق بالسبب، والعمل مجرد بدء التعرّض للسبب، لا هو السبب كله.',
+        q:'«العمل مرحلة صغيرة في تحصيل الرزق — وللرزق أسباب أخرى غير العمل»' },
+  was:{ d:'أنت لا تعمل من أجل العمل، بل من أجل حالة تريد الوصول إليها: راحة، استقرار، وعالم خاص تصنعه بيدك. هذا اتجاه صادق وعملي، وهو الذي يجعلك تبني أنظمة وتحافظ على إيقاعك بدل أن تُستهلك.',
+        w:'لكن الاتجاه الوسيط سُمّي وسيطًا لأنه يمرّ بالعمل ولا يقف عنده؛ ومتى تحققت الراحة أو الاستقرار قد تجد نفسك بلا سؤال يدفعك. الوسيلة إذا صارت غاية، فقدت طاقتها.',
+        q:'«الشيء الذي تركتَه… يهدمك»' },
+  naf:{ d:'العمل عندك مساحة إثبات وتحقيق ذات: تنجز لتتغلب، وتتغلب لتعرف أنك قادر. هذه طاقة دفع هائلة، وهي غالبًا سرّ من يصلون إلى ما لا يصل إليه غيرهم.',
+        w:'لكنها طاقة هشّة عند أول فشل — لأن قيمتك صارت معلّقة بالنتيجة لا بالنيّة. حين ترتبط قيمة الذات بالإنجاز وحده، يتحوّل كل تعثّر إلى حكم شخصي، لا إلى حدث عابر.',
+        q:'«لا تستغنِ عن جزءٍ من أجزائك — أعطِ كل ذي حقٍّ حقّه»' },
+  man:{ d:'سببك في أعلى طبقات النظرية: تعمل لأنك جزء من الحياة، ولأن العمل عبادة، ولأنك تقدّم خدمة للناس. هذا هو السبب الوحيد الذي لا يسقط بسقوط الراتب ولا بتعثّر المشروع، لأنه معلّق بمعنى لا بنتيجة.',
+        w:'لكن احذر المبالغة في الجهة المقابلة: إهمال السبب المادي الصحيح أو النفسي المستقر باسم المعنى ليس تجرّدًا، بل خلل في التكامل. المعنى الراقي يحتاج أرضًا صلبة يقف عليها.',
+        q:'﴿هو الذي جعل لكم الأرض ذلولًا فامشوا في مناكبها وكلوا من رزقه وإليه النشور﴾' }
+};
+
+const QUESTIONS_REFLECT = {
+  mad:'لو ضُمن لك الرزق كله… هل يبقى لعملك سبب؟',
+  was:'حين تصل إلى الراحة والاستقرار — ما الذي سيدفعك في اليوم التالي؟',
+  naf:'لو لم يرَ أحدٌ إنجازك… هل يبقى له المعنى نفسه؟',
+  man:'هل أعطيت سببك المادي والنفسي حقّهما، أم اكتفيت بالمعنى وحده؟'
+};
+
+/* ======================= الحالة ======================= */
+let i = 0;
+const ans = new Array(Q.length).fill(null);
+const shuffled = Q.map(q => shuffle(Object.keys(q.o)));
+
+function shuffle(a){
+  a = a.slice();
+  for(let j=a.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[a[j],a[k]]=[a[k],a[j]];}
+  return a;
+}
+function ar(n){return String(n).replace(/\d/g,d=>'٠١٢٣٤٥٦٧٨٩'[d]);}
+
+/* ======================= التدفق ======================= */
+function start(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  render();
+}
+
+function render(){
+  const q = Q[i];
+  document.getElementById('qkicker').textContent = q.k;
+  document.getElementById('qtext').textContent = q.t;
+  document.getElementById('cnt').textContent = ar(i+1)+' من '+ar(Q.length);
+  document.getElementById('prog').style.width = Math.max(3,(i/Q.length*100))+'%';
+
+  const box = document.getElementById('opts');
+  box.innerHTML='';
+  shuffled[i].forEach(key=>{
+    const b=document.createElement('button');
+    b.className='opt'+(ans[i]===key?' sel':'');
+    b.textContent=q.o[key];
+    b.onclick=()=>{ans[i]=key;render();};
+    box.appendChild(b);
+  });
+
+  document.getElementById('back').disabled = (i===0);
+  const nx=document.getElementById('next');
+  nx.disabled = !ans[i];
+  nx.textContent = (i===Q.length-1) ? 'اعرض نتيجتي ←' : 'التالي ←';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function next(){
+  if(!ans[i])return;
+  if(i===Q.length-1){finish();return;}
+  i++;render();
+}
+function prev(){ if(i>0){i--;render();} }
+
+/* ======================= النتيجة ======================= */
+function finish(){
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('result').style.display='block';
+  window.scrollTo({top:0});
+
+  // العدّ
+  const c={mad:0,was:0,naf:0,man:0};
+  ans.forEach(a=>c[a]++);
+  const tot=Q.length;
+  const pct={};
+  Object.keys(c).forEach(k=>pct[k]=Math.round(c[k]/tot*100));
+
+  // الاتجاه الغالب (عند التعادل: الأعلى ترتيبًا معنويًا ثم نفسيًا)
+  const order=['man','naf','was','mad'];
+  let top=order[0];
+  order.forEach(k=>{ if(c[k]>c[top]) top=k; });
+
+  const tied = order.filter(k=>c[k]===c[top]).length>1;
+  document.querySelector('#hero .lbl').textContent =
+    tied ? 'اتجاهك الغالب (بفارق بسيط)' : 'اتجاهك الغالب';
+
+  const D=DIRS[top], R=READ[top];
+  document.getElementById('hero').style.background=D.color;
+  document.getElementById('rname').textContent=D.name;
+  document.getElementById('rtag').textContent=D.tag;
+  document.getElementById('rdesc').textContent=R.d;
+  document.getElementById('rwatch').textContent=R.w;
+  document.getElementById('rquote').textContent=R.q;
+  document.getElementById('rq').textContent=QUESTIONS_REFLECT[top];
+
+  // الأشرطة
+  const bars=document.getElementById('bars');
+  bars.innerHTML='';
+  Object.keys(DIRS)
+    .sort((a,b)=>pct[b]-pct[a])
+    .forEach(k=>{
+      const row=document.createElement('div');
+      row.className='row';
+      row.innerHTML='<div class="top"><b>'+DIRS[k].name+'</b><em>'+ar(pct[k])+'٪</em></div>'+
+                    '<div class="track"><i data-w="'+pct[k]+'" style="background:'+DIRS[k].color+'"></i></div>';
+      bars.appendChild(row);
+    });
+  setTimeout(()=>{document.querySelectorAll('.track i').forEach(el=>el.style.width=el.dataset.w+'%');},80);
+
+  // الأركان الثلاثة (شريحة أسطورة التكامل)
+  // ملاحظة: الركن النفسي يُغذّى من اتجاهين (وسيطة + نفسية) فعتبته مضاعفة
+  const P=[
+    {t:'سبب مادي صحيح', v:c.mad, th:2},
+    {t:'سبب نفسي مستقر', v:c.was+c.naf, th:3},
+    {t:'سبب معنوي راقٍ', v:c.man, th:2}
+  ];
+  const pbox=document.getElementById('pillars');
+  pbox.innerHTML='';
+  P.forEach(p=>{
+    let cls,label;
+    if(p.v===0){cls='off';label='غائب';}
+    else if(p.v<p.th){cls='mid';label='خفيف';}
+    else {cls='on';label='حاضر';}
+    const d=document.createElement('div');
+    d.className='pill '+cls;
+    d.innerHTML='<div class="dot"></div><div class="t">'+p.t+'</div><div class="s">'+label+'</div>';
+    pbox.appendChild(d);
+  });
+
+  // مؤشر التكامل: توازن الأركان الثلاثة (أنتروبيا مطبّعة + أدنى نصيب)
+  const shares=P.map(p=>p.v/tot);
+  let H=0;
+  shares.forEach(s=>{ if(s>0) H += -s*Math.log(s); });
+  H = H/Math.log(3);                       // 0..1
+  const minShare = Math.min(...shares);    // 0..0.333
+  const integ = Math.round(100*(0.65*H + 0.35*(3*minShare)));
+
+  animateNum('intg', integ);
+
+  let v;
+  if(integ>=75) v='متكامل. أعطيت الأسباب الثلاثة حقّها تقريبًا — وهذا ما يجعل الدافع يصمد حين يسقط أحد الأركان.';
+  else if(integ>=50) v='قريب من التكامل، لكن ركنًا واحدًا يأخذ أقل من حقّه. انتبه له قبل أن يتحوّل الخلل إلى انطفاء.';
+  else if(integ>=25) v='مائل بوضوح إلى ركن واحد. الميل يعطي قوة الآن، ويترك هشاشة لاحقًا.';
+  else v='سببك يقف على ركن واحد تقريبًا. «الشيء الذي تركتَه… يهدمك» — ابدأ من الركن الغائب.';
+  document.getElementById('ivrd').textContent=v;
+
+  window.__res={top:D.short, pct:pct, integ:integ};
+}
+
+function animateNum(id,target){
+  const el=document.getElementById(id);
+  let n=0;
+  const step=Math.max(1,Math.round(target/28));
+  const t=setInterval(()=>{
+    n+=step;
+    if(n>=target){n=target;clearInterval(t);}
+    el.textContent=n;
+  },28);
+}
+
+function share(){
+  const r=window.__res;
+  const txt='وأنت لماذا تعمل؟ 🧭\n'+
+    'اتجاهي الغالب: '+r.top+'\n'+
+    'مادية '+ar(r.pct.mad)+'٪ · وسيطة '+ar(r.pct.was)+'٪ · نفسية '+ar(r.pct.naf)+'٪ · معنوية '+ar(r.pct.man)+'٪\n'+
+    'مؤشر التكامل: '+r.integ+'/100';
+  const done=()=>{
+    const t=document.getElementById('toast');
+    t.classList.add('on');
+    setTimeout(()=>t.classList.remove('on'),1900);
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done).catch(()=>fallback(txt,done));
+  } else fallback(txt,done);
+}
+function fallback(txt,cb){
+  const ta=document.createElement('textarea');
+  ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');cb();}catch(e){prompt('انسخ نتيجتك:',txt);}
+  document.body.removeChild(ta);
+}
+
+function again(){
+  i=0;
+  ans.fill(null);
+  Q.forEach((q,idx)=>shuffled[idx]=shuffle(Object.keys(q.o)));
+  document.getElementById('result').style.display='none';
+  document.getElementById('quiz').style.display='block';
+  render();
+}
+</script>
+</body>
+</html>
